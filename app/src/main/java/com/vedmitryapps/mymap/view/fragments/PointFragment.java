@@ -13,7 +13,7 @@ import com.vedmitryapps.mymap.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AddPointFragment extends Fragment {
+public class PointFragment extends Fragment {
 
     @BindView(R.id.location)
     TextView textView;
@@ -21,7 +21,7 @@ public class AddPointFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.new_point, container, false);
+        View view = inflater.inflate(R.layout.point_info, container, false);
 
         ButterKnife.bind(this, view);
         double lat = getArguments().getDouble("lat");
