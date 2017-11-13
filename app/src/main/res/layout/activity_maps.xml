@@ -4,13 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:text="12345"
+        android:textColor="@android:color/black"
+        android:id="@+id/coordinates"
+        android:textSize="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/map"
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vedmitryapps.mymap.view.activities.MapsActivity" />
+    tools:context="com.vedmitryapps.mymap.view.activities.MapsActivity"
+    android:layout_below="@+id/coordinates" />
 
 
     <LinearLayout
@@ -23,5 +34,18 @@
         android:layout_alignParentStart="true">
 
     </LinearLayout>
+
+    <ImageButton
+        android:onClick="findMe"
+        android:src="@drawable/ic_find_me"
+        android:background="@drawable/button_bg"
+        android:layout_marginRight="16dp"
+        android:id="@+id/findMe"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_below="@+id/coordinates"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="195dp" />
 
 </RelativeLayout>
