@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -26,6 +27,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.Dot;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -34,6 +37,7 @@ import com.vedmitryapps.mymap.model.Point;
 import com.vedmitryapps.mymap.presenter.PresenterImpl;
 import com.vedmitryapps.mymap.view.fragments.AddPointFragment;
 import com.vedmitryapps.mymap.view.fragments.PointFragment;
+import com.vedmitryapps.mymap.view.fragments.PointInfoFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,12 +93,40 @@ public class MapsActivity extends AppCompatActivity implements
                         mMyLocationMarker.setVisible(true);
 
                     animateMarker(mMyLocationMarker, new LatLng(location.getLatitude(), location.getLongitude()));
+
+
+
                   //  mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
                 }
             }
         };
 
         createLocationRequest();
+
+    }
+
+    private void drawCircle(){
+
+        CircleOptions circleOptions = new CircleOptions();
+        Dot dot = new Dot();
+
+        // Specifying the center of the circle
+        circleOptions.center(mMyLocationMarker.getPosition());
+
+        // Radius of the circle
+        circleOptions.radius(50);
+
+        // Border color of the circle
+        circleOptions.strokeColor(Color.BLACK);
+
+        // Fill color of the circle
+        circleOptions.fillColor(0x30ff0000);
+
+        // Border width of the circle
+        circleOptions.strokeWidth(2);
+
+        // Adding the circle to the GoogleMap
+        mMap.addCircle(circleOptions);
 
     }
 
@@ -143,7 +175,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         mMyLocationMarker = mMap.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag24))
-                .anchor(0.25f,1)
+                .anchor(0,1)
                 .position(sydney)
                 .visible(false)
                 .title("I'm"));
@@ -217,7 +249,7 @@ public class MapsActivity extends AppCompatActivity implements
         bundle.putDouble("lon", latLng.longitude);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        AddPointFragment fragment = new AddPointFragment();
+        PointFragment fragment = new PointFragment();
         fragment.setArguments(bundle);
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
@@ -238,7 +270,7 @@ public class MapsActivity extends AppCompatActivity implements
         bundle.putDouble("lon", marker.getPosition().longitude);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        PointFragment fragment = new PointFragment();
+        PointInfoFragment fragment = new PointInfoFragment();
         fragment.setArguments(bundle);
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
@@ -286,11 +318,37 @@ public class MapsActivity extends AppCompatActivity implements
 
     public void findMe(android.view.View view) {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMyLocationMarker.getPosition(), 18.0f));
-
     }
 
     public void addPoint(android.view.View view) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        AddPointFragment fragment = new AddPointFragment();
+       // fragment.setArguments(bundle);
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
+
+    public void createPoint(android.view.View view) {
         presenter.addPoint(mMarker);
+
+        Bundle bundle = new Bundle();
+        bundle.putDouble("lat", mMarker.getPosition().latitude);
+        bundle.putDouble("lon", mMarker.getPosition().longitude);
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        PointInfoFragment fragment = new PointInfoFragment();
+        fragment.setArguments(bundle);
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+    }
+
+    public void deletePoint(android.view.View view) {
+        presenter.deletePoint(mMarker);
+
     }
 }
 

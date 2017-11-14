@@ -10,6 +10,8 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+
     <TextView
         android:textColor="@android:color/black"
         android:textSize="16dp"
@@ -25,16 +27,16 @@
 
 
     <ImageButton
-        android:onClick="addPoint"
+        android:onClick="deletePoint"
         android:clickable="true"
         android:id="@+id/button_add"
-        android:layout_marginRight="10dp"
         android:background="@drawable/button_bg"
         android:src="@drawable/ic_delete"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/button_share" />
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/button_share"
+        android:layout_toStartOf="@+id/button_share" />
 
     <ImageButton
         android:id="@+id/button_share"

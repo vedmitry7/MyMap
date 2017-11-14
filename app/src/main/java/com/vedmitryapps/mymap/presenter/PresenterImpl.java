@@ -17,8 +17,6 @@ public class PresenterImpl implements Presenter {
         mRealm = Realm.getInstance(view.getContext());
     }
 
-
-
     @Override
     public void addPoint(Marker marker) {
         mRealm.beginTransaction();
@@ -32,7 +30,9 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void deletePoint(Point point) {
+    public void deletePoint(Marker marker) {
+
+
 
     }
 

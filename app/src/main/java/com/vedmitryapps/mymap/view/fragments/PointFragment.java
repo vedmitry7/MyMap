@@ -21,7 +21,7 @@ public class PointFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.point_info, container, false);
+        View view = inflater.inflate(R.layout.new_point, container, false);
 
         ButterKnife.bind(this, view);
         double lat = getArguments().getDouble("lat");
