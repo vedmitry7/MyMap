@@ -30,4 +30,8 @@ public class AddPointFragment extends Fragment {
         ButterKnife.bind(this, view);
         return view;
     }
+
+    public String getDescription(){
+        return String.valueOf(textView.getText());
+    }
 }

@@ -34,9 +34,8 @@
         android:src="@drawable/ic_delete"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/button_share"
-        android:layout_toStartOf="@+id/button_share" />
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/button_share" />
 
     <ImageButton
         android:id="@+id/button_share"

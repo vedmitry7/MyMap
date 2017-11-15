@@ -49,17 +49,20 @@ public class MapsActivity extends AppCompatActivity implements
         View,
         OnMapReadyCallback,
         GoogleMap.OnMapClickListener,
-        GoogleMap.OnMarkerClickListener
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnMarkerDragListener
 {
 
     private GoogleMap mMap;
     private Marker mMarker;
+    private Marker selectedMarker;
     private Marker mMyLocationMarker;
     private FragmentManager fragmentManager;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
     private int count;
     private PresenterImpl presenter;
+    AddPointFragment addPointFragment;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -96,7 +99,7 @@ public class MapsActivity extends AppCompatActivity implements
 
 
 
-                  //  mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
+                    //  mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
                 }
             }
         };
@@ -240,6 +243,7 @@ public class MapsActivity extends AppCompatActivity implements
             mMarker = mMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .draggable(true));
+            mMarker.setTag("main");
         } else {
             animateMarker(mMarker, latLng);
         }
@@ -264,6 +268,15 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public boolean onMarkerClick(Marker marker) {
 //        textView.setText("Marker" + "\r\n" + mMarker.getPosition().latitude + "\r\n" + mMarker.getPosition().longitude);
+
+        selectedMarker = marker;
+
+
+        if(marker.getTag()!=null && marker.getTag().equals("main")){
+            Log.i("TAG21", "TAG = main.");
+            onMapClick(marker.getPosition());
+            return false;
+        }
 
         Bundle bundle = new Bundle();
         bundle.putDouble("lat", marker.getPosition().latitude);
@@ -305,6 +318,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public void showPoints(RealmResults<Point> points) {
+        mMap.clear();
         Log.i("TAG21", String.valueOf(points.size()));
         for (Point p : points
                 ) {
@@ -312,7 +326,16 @@ public class MapsActivity extends AppCompatActivity implements
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag36))
                     .draggable(true)
                     .anchor(0.0f, 1.0f) // Anchors the mMarker on the bottom left
-                    .position(new LatLng(p.getLatitude(), p.getLongitude())));
+                    .position(new LatLng(p.getLatitude(), p.getLongitude()))
+                    .title(p.getDescription()));
+            Log.i("TAG21", String.valueOf(p.getDescription()));
+        }
+
+        if (mMarker != null) {
+            mMarker = mMap.addMarker(new MarkerOptions()
+                    .position(mMarker.getPosition())
+                    .draggable(true));
+            mMarker.setTag("main");
         }
     }
 
@@ -322,16 +345,20 @@ public class MapsActivity extends AppCompatActivity implements
 
     public void addPoint(android.view.View view) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        AddPointFragment fragment = new AddPointFragment();
-       // fragment.setArguments(bundle);
-        transaction.replace(R.id.container, fragment);
+        addPointFragment = new AddPointFragment();
+        // addPointFragment.setArguments(bundle);
+        transaction.replace(R.id.container, addPointFragment);
         transaction.addToBackStack(null);
         transaction.commit();
 
     }
 
     public void createPoint(android.view.View view) {
-        presenter.addPoint(mMarker);
+        Point point = new Point();
+        point.setLatitude(mMarker.getPosition().latitude);
+        point.setLongitude(mMarker.getPosition().longitude);
+        point.setDescription(addPointFragment.getDescription());
+        presenter.createPoint(point);
 
         Bundle bundle = new Bundle();
         bundle.putDouble("lat", mMarker.getPosition().latitude);
@@ -347,7 +374,22 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     public void deletePoint(android.view.View view) {
-        presenter.deletePoint(mMarker);
+        presenter.deletePoint(selectedMarker);
+
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
 
     }
 }
