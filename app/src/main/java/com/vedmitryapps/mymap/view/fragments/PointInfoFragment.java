@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.vedmitryapps.mymap.R;
@@ -18,6 +19,9 @@ public class PointInfoFragment extends Fragment {
     @BindView(R.id.location)
     TextView textView;
 
+    @BindView(R.id.descriptionEt)
+    EditText editText;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -26,6 +30,7 @@ public class PointInfoFragment extends Fragment {
         ButterKnife.bind(this, view);
         double lat = getArguments().getDouble("lat");
         double lon = getArguments().getDouble("lon");
+        editText.setText(getArguments().getString("desc"));
         textView.setText(lat + "\r\n" + lon);
         return view;
     }

@@ -12,51 +12,71 @@
 
 
 
-    <TextView
-        android:textColor="@android:color/black"
-        android:textSize="16dp"
-        android:id="@+id/location"
-        android:layout_width="wrap_content"
+    <EditText
+        android:background="@drawable/button_bg"
+        android:id="@+id/descriptionEt"
+        android:maxLines="2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="485465465"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/button_add"
-        android:layout_toStartOf="@+id/button_add" />
+        android:layout_marginBottom="10dp"/>
 
 
-    <ImageButton
-        android:onClick="deletePoint"
-        android:clickable="true"
-        android:id="@+id/button_add"
-        android:background="@drawable/button_bg"
-        android:src="@drawable/ic_delete"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@+id/button_share" />
+    <RelativeLayout
+        android:layout_below="@+id/descriptionEt"
+        android:id="@+id/infoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <ImageButton
-        android:id="@+id/button_share"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/button_bg"
-        android:src="@drawable/ic_share"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/button_copy" />
+        <TextView
+            android:textColor="@android:color/black"
+            android:textSize="16dp"
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="485465465"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/button_add"
+            android:layout_toStartOf="@+id/button_add" />
 
-    <ImageButton
-        android:layout_marginRight="6dp"
-        android:id="@+id/button_copy"
-        android:onClick="copy"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:background="@drawable/button_bg"
-        android:src="@drawable/ic_copy"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+
+        <ImageButton
+            android:onClick="deletePoint"
+            android:clickable="true"
+            android:id="@+id/button_add"
+            android:background="@drawable/button_bg"
+            android:src="@drawable/ic_delete"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/button_share" />
+
+        <ImageButton
+            android:id="@+id/button_share"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_bg"
+            android:src="@drawable/ic_share"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/button_copy" />
+
+        <ImageButton
+            android:layout_marginRight="6dp"
+            android:id="@+id/button_copy"
+            android:onClick="copy"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/button_bg"
+            android:src="@drawable/ic_copy"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

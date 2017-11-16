@@ -1,14 +1,25 @@
 package com.vedmitryapps.mymap.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Point extends RealmObject {
 
+    @PrimaryKey
+    private long id;
     private double latitude;
     private double longitude;
     private String description;
     private String shape;
     private int color;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public double getLongitude() {
         return longitude;

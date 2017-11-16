@@ -82,6 +82,7 @@ public class MapsActivity extends AppCompatActivity implements
         fragmentManager = getFragmentManager();
 
         presenter = new PresenterImpl(this);
+       // presenter.removeAllPoints();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {
@@ -162,6 +163,8 @@ public class MapsActivity extends AppCompatActivity implements
         mMap = googleMap;
         mMap.setOnMapClickListener(this);
         mMap.setOnMarkerClickListener(this);
+        mMap.setOnMarkerDragListener(this);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
@@ -271,6 +274,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         selectedMarker = marker;
 
+        presenter.onMarkerClick(marker);
 
         if(marker.getTag()!=null && marker.getTag().equals("main")){
             Log.i("TAG21", "TAG = main.");
@@ -281,6 +285,7 @@ public class MapsActivity extends AppCompatActivity implements
         Bundle bundle = new Bundle();
         bundle.putDouble("lat", marker.getPosition().latitude);
         bundle.putDouble("lon", marker.getPosition().longitude);
+        bundle.putString("desc", presenter.getPointDescription((Long) marker.getTag()));
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         PointInfoFragment fragment = new PointInfoFragment();
@@ -322,12 +327,13 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("TAG21", String.valueOf(points.size()));
         for (Point p : points
                 ) {
-            mMap.addMarker(new MarkerOptions()
+           Marker m = mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag36))
                     .draggable(true)
                     .anchor(0.0f, 1.0f) // Anchors the mMarker on the bottom left
                     .position(new LatLng(p.getLatitude(), p.getLongitude()))
                     .title(p.getDescription()));
+            m.setTag(p.getId());
             Log.i("TAG21", String.valueOf(p.getDescription()));
         }
 
@@ -380,6 +386,8 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public void onMarkerDragStart(Marker marker) {
+        selectedMarker = marker;
+        Log.i("TAG21", String.valueOf(marker.getTag()));
 
     }
 
@@ -390,7 +398,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
-
+        presenter.updatePoint(selectedMarker, marker);
     }
 }
 
