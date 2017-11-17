@@ -12,6 +12,15 @@ public class Point extends RealmObject {
     private String description;
     private String shape;
     private int color;
+    private int radius;
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
+    }
 
     public long getId() {
         return id;

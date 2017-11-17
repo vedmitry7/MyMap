@@ -28,11 +28,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.Dot;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.vedmitryapps.mymap.R;
+import com.vedmitryapps.mymap.SphericalUtil;
 import com.vedmitryapps.mymap.model.Point;
 import com.vedmitryapps.mymap.presenter.PresenterImpl;
 import com.vedmitryapps.mymap.view.fragments.AddPointFragment;
@@ -64,6 +64,10 @@ public class MapsActivity extends AppCompatActivity implements
     private PresenterImpl presenter;
     AddPointFragment addPointFragment;
 
+    LatLng l1 = new LatLng(47.973910,37.712992);
+    LatLng l2 = new LatLng(47.975638,37.713850);
+
+
     private FusedLocationProviderClient mFusedLocationClient;
 
     @BindView(R.id.coordinates)
@@ -84,6 +88,8 @@ public class MapsActivity extends AppCompatActivity implements
         presenter = new PresenterImpl(this);
        // presenter.removeAllPoints();
 
+
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationCallback = new LocationCallback() {
             @Override
@@ -91,8 +97,12 @@ public class MapsActivity extends AppCompatActivity implements
                 for (Location location : locationResult.getLocations()) {
                     count++;
                     Log.i("TAG21", location.getLatitude() + ":" + location.getLongitude());
-                    textView.setText(count +  "\r\n" + location.getLatitude() + "\r\n" + location.getLongitude());
-
+                    textView.setText(count +  "\r\n" + location.getLatitude() + "\r\n" + location.getLongitude() + "\r\n" + "Distance - " + SphericalUtil.computeDistanceBetween(l1, new LatLng(location.getLatitude(), location.getLongitude())));
+                    if(SphericalUtil.computeDistanceBetween(l2, new LatLng(location.getLatitude(), location.getLongitude()))>200){
+                        textView.setTextColor(Color.RED);
+                    } else {
+                        textView.setTextColor(Color.GREEN);
+                    }
                     if(!mMyLocationMarker.isVisible())
                         mMyLocationMarker.setVisible(true);
 
@@ -107,24 +117,30 @@ public class MapsActivity extends AppCompatActivity implements
 
         createLocationRequest();
 
+
+        LatLng l1 = new LatLng(47.973910,37.712992);
+        LatLng l2 = new LatLng(47.975638,37.713850);
+
+        Log.i("TAG21", "distance - " + SphericalUtil.computeDistanceBetween(l1,l2));
+
+
     }
 
-    private void drawCircle(){
+    private void drawCircle(LatLng latLng){
 
         CircleOptions circleOptions = new CircleOptions();
-        Dot dot = new Dot();
 
         // Specifying the center of the circle
-        circleOptions.center(mMyLocationMarker.getPosition());
+        circleOptions.center(latLng);
 
         // Radius of the circle
-        circleOptions.radius(50);
+        circleOptions.radius(200);
 
         // Border color of the circle
         circleOptions.strokeColor(Color.BLACK);
 
         // Fill color of the circle
-        circleOptions.fillColor(0x30ff0000);
+        circleOptions.fillColor(0x3000ff00);
 
         // Border width of the circle
         circleOptions.strokeWidth(2);
@@ -261,6 +277,8 @@ public class MapsActivity extends AppCompatActivity implements
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+
+        drawCircle(l1);
     }
 
     public void addPoint(View v) {
