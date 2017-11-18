@@ -94,7 +94,20 @@ public class MapsActivity extends AppCompatActivity implements
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                for (Location location : locationResult.getLocations()) {
+                Location location = locationResult.getLastLocation();
+                Log.i("TAG21", location.getLatitude() + ":" + location.getLongitude());
+                textView.setText(count +  "\r\n" + location.getLatitude() + "\r\n" + location.getLongitude() + "\r\n" + "Distance - " + SphericalUtil.computeDistanceBetween(l1, new LatLng(location.getLatitude(), location.getLongitude())));
+                if(SphericalUtil.computeDistanceBetween(l2, new LatLng(location.getLatitude(), location.getLongitude()))>200){
+                    textView.setTextColor(Color.RED);
+                } else {
+                    textView.setTextColor(Color.GREEN);
+                }
+                if(!mMyLocationMarker.isVisible())
+                    mMyLocationMarker.setVisible(true);
+
+                animateMarker(mMyLocationMarker, new LatLng(location.getLatitude(), location.getLongitude()));
+
+      /*          for (Location location : locationResult.getLocations()) {
                     count++;
                     Log.i("TAG21", location.getLatitude() + ":" + location.getLongitude());
                     textView.setText(count +  "\r\n" + location.getLatitude() + "\r\n" + location.getLongitude() + "\r\n" + "Distance - " + SphericalUtil.computeDistanceBetween(l1, new LatLng(location.getLatitude(), location.getLongitude())));
@@ -108,15 +121,12 @@ public class MapsActivity extends AppCompatActivity implements
 
                     animateMarker(mMyLocationMarker, new LatLng(location.getLatitude(), location.getLongitude()));
 
-
-
                     //  mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())));
-                }
+                }*/
             }
         };
 
         createLocationRequest();
-
 
         LatLng l1 = new LatLng(47.973910,37.712992);
         LatLng l2 = new LatLng(47.975638,37.713850);
@@ -203,6 +213,7 @@ public class MapsActivity extends AppCompatActivity implements
                 .title("I'm"));
 
         presenter.mapReady();
+        drawCircle(l1);
 
        /* LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
@@ -278,7 +289,6 @@ public class MapsActivity extends AppCompatActivity implements
         transaction.addToBackStack(null);
         transaction.commit();
 
-        drawCircle(l1);
     }
 
     public void addPoint(View v) {
