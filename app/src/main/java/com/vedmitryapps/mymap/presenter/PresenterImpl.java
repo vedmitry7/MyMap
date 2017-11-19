@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.Marker;
 import com.vedmitryapps.mymap.model.Point;
-import com.vedmitryapps.mymap.view.activities.View;
+import com.vedmitryapps.mymap.view.activities.ViewInterface;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -13,10 +13,10 @@ import io.realm.exceptions.RealmMigrationNeededException;
 
 public class PresenterImpl implements Presenter {
 
-    private View view;
+    private ViewInterface view;
     private Realm mRealm;
 
-    public PresenterImpl(View view) {
+    public PresenterImpl(ViewInterface view) {
         this.view = view;
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(view.getContext()).build();
 
@@ -68,16 +68,6 @@ public class PresenterImpl implements Presenter {
     @Override
     public void deletePoint(Marker marker) {
         mRealm.beginTransaction();
- /*       RealmResults<Point> points = mRealm.where(Point.class)
-                .equalTo("latitude", marker.getPosition().latitude)
-                .equalTo("longitude", marker.getPosition().longitude)
-                .findAll();
-
-        if(!points.isEmpty()){
-            for (int i = points.size() - 1; i >= 0; i--) {
-                points.get(i).removeFromRealm();
-            }
-        }*/
 
         Point point = mRealm.where(Point.class)
                 .equalTo("latitude", marker.getPosition().latitude)

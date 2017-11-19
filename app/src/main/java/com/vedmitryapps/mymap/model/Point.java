@@ -13,6 +13,15 @@ public class Point extends RealmObject {
     private String shape;
     private int color;
     private int radius;
+    private int markerImageId;
+
+    public int getMarkerImageId() {
+        return markerImageId;
+    }
+
+    public void setMarkerImageId(int markerImageId) {
+        this.markerImageId = markerImageId;
+    }
 
     public int getRadius() {
         return radius;

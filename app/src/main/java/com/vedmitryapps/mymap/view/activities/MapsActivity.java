@@ -6,6 +6,7 @@ import android.animation.TypeEvaluator;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -15,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Property;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -46,7 +48,7 @@ import io.realm.RealmResults;
 import static com.vedmitryapps.mymap.R.id.map;
 
 public class MapsActivity extends AppCompatActivity implements
-        View,
+        ViewInterface,
         OnMapReadyCallback,
         GoogleMap.OnMapClickListener,
         GoogleMap.OnMarkerClickListener,
@@ -291,7 +293,7 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
-    public void addPoint(View v) {
+    public void addPoint(ViewInterface v) {
 
     }
 
@@ -341,7 +343,7 @@ public class MapsActivity extends AppCompatActivity implements
         animator.start();
     }
 
-    public void copy(View view) {
+    public void copy(ViewInterface view) {
     }
 
     @Override
@@ -427,6 +429,11 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public void onMarkerDragEnd(Marker marker) {
         presenter.updatePoint(selectedMarker, marker);
+    }
+
+    public void addMarkerImage(View view) {
+        Intent intent = new Intent(this, CreateMarkerActivity.class);
+        startActivity(intent);
     }
 }
 
