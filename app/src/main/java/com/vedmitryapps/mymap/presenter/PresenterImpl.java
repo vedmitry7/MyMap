@@ -1,8 +1,13 @@
 package com.vedmitryapps.mymap.presenter;
 
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
+import com.vedmitryapps.mymap.R;
+import com.vedmitryapps.mymap.model.MarkerImage;
 import com.vedmitryapps.mymap.model.Point;
 import com.vedmitryapps.mymap.view.activities.ViewInterface;
 
@@ -43,6 +48,7 @@ public class PresenterImpl implements Presenter {
         point.setLongitude(p.getLongitude());
         point.setDescription(p.getDescription());
         point.setId(getNextKey());
+        point.setMarkerImageId(p.getMarkerImageId());
         mRealm.commitTransaction();
 
         Log.i("TAG21", String.valueOf(p.getDescription()));
@@ -109,6 +115,19 @@ public class PresenterImpl implements Presenter {
         updatePoints();
     }
 
+    @Override
+    public BitmapDescriptor getBitmap(int markerImageId) {
+
+        MarkerImage markerImage = mRealm.where(MarkerImage.class)
+                .equalTo("id", markerImageId)
+                .findFirst();
+
+        if(markerImage != null){
+            return  BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeByteArray(markerImage.getImage(), 0, markerImage.getImage().length));
+        }
+        return BitmapDescriptorFactory.fromResource(R.drawable.flag36);
+    }
+
     private void updatePoints(){
         RealmResults<Point> points = mRealm.where(Point.class).findAll();
         view.showPoints(points);
@@ -128,7 +147,7 @@ public class PresenterImpl implements Presenter {
     }
 
 
-    public void removeAllPoints(){
+    public void removeAll(){
         RealmResults<Point> points = mRealm.where(Point.class)
                 .findAll();
         mRealm.beginTransaction();
@@ -138,7 +157,16 @@ public class PresenterImpl implements Presenter {
             p.removeFromRealm();
         }
         mRealm.commitTransaction();
+
+
+    RealmResults<MarkerImage> markerImages = mRealm.where(MarkerImage.class)
+            .findAll();
+        mRealm.beginTransaction();
+
+        for (MarkerImage m:markerImages
+             ) {
+        m.removeFromRealm();
     }
-
-
+        mRealm.commitTransaction();
+    }
 }

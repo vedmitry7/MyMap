@@ -33,7 +33,7 @@ public class AddPointFragment extends Fragment {
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Realm mRealm;
 
@@ -73,5 +73,9 @@ public class AddPointFragment extends Fragment {
 
     public String getDescription(){
         return String.valueOf(textView.getText());
+    }
+
+    public int getSelectedImageId(){
+        return mAdapter.getSelectedImageId();
     }
 }

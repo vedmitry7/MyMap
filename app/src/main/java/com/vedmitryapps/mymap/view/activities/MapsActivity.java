@@ -6,7 +6,6 @@ import android.animation.TypeEvaluator;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -38,6 +37,7 @@ import com.vedmitryapps.mymap.SphericalUtil;
 import com.vedmitryapps.mymap.model.Point;
 import com.vedmitryapps.mymap.presenter.PresenterImpl;
 import com.vedmitryapps.mymap.view.fragments.AddPointFragment;
+import com.vedmitryapps.mymap.view.fragments.CreateMarkerFragment;
 import com.vedmitryapps.mymap.view.fragments.PointFragment;
 import com.vedmitryapps.mymap.view.fragments.PointInfoFragment;
 
@@ -64,7 +64,8 @@ public class MapsActivity extends AppCompatActivity implements
     private LocationCallback mLocationCallback;
     private int count;
     private PresenterImpl presenter;
-    AddPointFragment addPointFragment;
+    private AddPointFragment addPointFragment;
+    private CreateMarkerFragment createMarkerFragment;
 
     LatLng l1 = new LatLng(47.973910,37.712992);
     LatLng l2 = new LatLng(47.975638,37.713850);
@@ -358,7 +359,7 @@ public class MapsActivity extends AppCompatActivity implements
         for (Point p : points
                 ) {
            Marker m = mMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag36))
+                    .icon(presenter.getBitmap(p.getMarkerImageId()))
                     .draggable(true)
                     .anchor(0.0f, 1.0f) // Anchors the mMarker on the bottom left
                     .position(new LatLng(p.getLatitude(), p.getLongitude()))
@@ -379,7 +380,7 @@ public class MapsActivity extends AppCompatActivity implements
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMyLocationMarker.getPosition(), 18.0f));
     }
 
-    public void addPoint(android.view.View view) {
+    public void addPoint(View view) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         addPointFragment = new AddPointFragment();
         // addPointFragment.setArguments(bundle);
@@ -389,11 +390,12 @@ public class MapsActivity extends AppCompatActivity implements
 
     }
 
-    public void createPoint(android.view.View view) {
+    public void createPoint(View view) {
         Point point = new Point();
         point.setLatitude(mMarker.getPosition().latitude);
         point.setLongitude(mMarker.getPosition().longitude);
         point.setDescription(addPointFragment.getDescription());
+        point.setMarkerImageId(addPointFragment.getSelectedImageId());
         presenter.createPoint(point);
 
         Bundle bundle = new Bundle();
@@ -432,8 +434,21 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     public void addMarkerImage(View view) {
-        Intent intent = new Intent(this, CreateMarkerActivity.class);
-        startActivity(intent);
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        createMarkerFragment = new CreateMarkerFragment();
+        transaction.replace(R.id.container, createMarkerFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        /*Intent intent = new Intent(this, CreateMarkerActivity.class);
+        startActivity(intent);*/
+    }
+
+    public void createMarkerFinished(View view) {
+        createMarkerFragment.saveImg();
+        addPoint(view);
+
     }
 }
 

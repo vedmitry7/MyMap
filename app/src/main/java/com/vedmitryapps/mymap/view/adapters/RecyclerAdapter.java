@@ -2,6 +2,7 @@ package com.vedmitryapps.mymap.view.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,8 +21,13 @@ import butterknife.ButterKnife;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     List<MarkerImage> list;
+    static int selectedPos = 0;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public int getSelectedImageId(){
+        return list.get(selectedPos).getId();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder  {
         @Nullable
         @BindView(R.id.imageView)
         ImageView imageView;
@@ -51,10 +57,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         if (position>=list.size()){
             return;
         }
+
+        if(selectedPos == position){
+            holder.imageView.setBackgroundColor(Color.BLUE);
+        } else {
+            holder.imageView.setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectedPos = position;
+                notifyDataSetChanged();
+            }
+        });
         holder.imageView.setImageBitmap(getBitmap(list.get(position).getImage()));
     }
 
