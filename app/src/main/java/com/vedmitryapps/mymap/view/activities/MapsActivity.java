@@ -448,7 +448,10 @@ public class MapsActivity extends AppCompatActivity implements
     public void createMarkerFinished(View view) {
         createMarkerFragment.saveImg();
         addPoint(view);
+    }
 
+    public void nextStep(View view) {
+        createMarkerFragment.nextStep();
     }
 }
 

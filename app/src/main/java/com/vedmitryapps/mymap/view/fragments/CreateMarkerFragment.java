@@ -27,6 +27,7 @@ import io.realm.exceptions.RealmMigrationNeededException;
 
 public class CreateMarkerFragment extends Fragment {
 
+    @Nullable
     @BindView(R.id.createMarkerSurfaceView)
     CreateMarkerSurfaceView markerSurfaceView;
 
@@ -109,4 +110,7 @@ public class CreateMarkerFragment extends Fragment {
         }
     }
 
+    public void nextStep() {
+        markerSurfaceView.nextStep();
+    }
 }

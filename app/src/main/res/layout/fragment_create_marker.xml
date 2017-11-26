@@ -17,4 +17,11 @@
         android:layout_height="wrap_content"
         android:text="Ok" />
 
+    <Button
+        android:id="@+id/nextStepButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="nextStep"
+        android:text="Далее" />
+
 </LinearLayout>
