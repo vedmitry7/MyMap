@@ -41,7 +41,6 @@ public class AddPointFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_point, container, false);
-
         ButterKnife.bind(this, view);
 
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(view.getContext()).build();
