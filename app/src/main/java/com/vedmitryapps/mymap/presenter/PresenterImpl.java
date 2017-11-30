@@ -113,6 +113,15 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
+    public void updateMarkerDescription(long id, String desc) {
+        mRealm.beginTransaction();
+        Point point = mRealm.where(Point.class).equalTo("id", id).findFirst();
+        point.setDescription(desc);
+        mRealm.commitTransaction();
+        updatePoints();
+    }
+
+    @Override
     public MarkerImage getMarkerImage(int markerImageId) {
         MarkerImage markerImage = mRealm.where(MarkerImage.class)
                 .equalTo("id", markerImageId)

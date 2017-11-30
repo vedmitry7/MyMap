@@ -18,4 +18,6 @@ public interface Presenter {
     MarkerImage getMarkerImage(int markerId);
 
     BitmapDescriptor getBitmap(int markerImageId);
+
+    void updateMarkerDescription(long id, String desc);
 }

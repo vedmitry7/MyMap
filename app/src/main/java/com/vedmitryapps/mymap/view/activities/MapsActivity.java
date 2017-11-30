@@ -302,11 +302,8 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-//        textView.setText("Marker" + "\r\n" + mMarker.getPosition().latitude + "\r\n" + mMarker.getPosition().longitude);
 
         selectedMarker = marker;
-
-        presenter.onMarkerClick(marker);
 
         if(marker.getTag()!=null && marker.getTag().equals("main")){
             Log.i("TAG21", "TAG = main.");
@@ -317,10 +314,12 @@ public class MapsActivity extends AppCompatActivity implements
         Bundle bundle = new Bundle();
         bundle.putDouble("lat", marker.getPosition().latitude);
         bundle.putDouble("lon", marker.getPosition().longitude);
+        bundle.putLong("id", (Long) marker.getTag());
         bundle.putString("desc", presenter.getPointDescription((Long) marker.getTag()));
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         PointInfoFragment fragment = new PointInfoFragment();
+        fragment.setPresenter(presenter);
         fragment.setArguments(bundle);
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
@@ -328,6 +327,7 @@ public class MapsActivity extends AppCompatActivity implements
 
         return false;
     }
+
 
     static void animateMarker(Marker marker, LatLng finalPosition) {
         TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {

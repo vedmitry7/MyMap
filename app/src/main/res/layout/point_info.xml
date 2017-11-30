@@ -18,8 +18,11 @@
         xmlns:android="http://schemas.android.com/apk/res/android">
 
         <EditText
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
             android:background="@drawable/button_bg"
             android:id="@+id/descriptionEt"
+            android:hint="Описание"
             android:maxLines="2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
