@@ -1,6 +1,5 @@
 package com.vedmitryapps.mymap.presenter;
 
-
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.Marker;
 import com.vedmitryapps.mymap.model.MarkerImage;
@@ -16,8 +15,6 @@ public interface Presenter {
     void onDestroy();
     void mapReady();
     MarkerImage getMarkerImage(int markerId);
-
     BitmapDescriptor getBitmap(int markerImageId);
-
-    void updateMarkerDescription(long id, String desc);
+    void updatePointDescription(long id, String desc);
 }

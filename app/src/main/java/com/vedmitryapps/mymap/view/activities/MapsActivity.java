@@ -433,6 +433,10 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
+        if(marker.getTag().equals("main")) {
+            onMapClick(marker.getPosition());
+            return;
+        }
         presenter.updatePoint(selectedMarker, marker);
     }
 

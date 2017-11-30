@@ -62,7 +62,7 @@ public class PointInfoFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                presenter.updateMarkerDescription(id, editable.toString());
+                presenter.updatePointDescription(id, editable.toString());
             }
         });
         textView.setText(lat + "\r\n" + lon);

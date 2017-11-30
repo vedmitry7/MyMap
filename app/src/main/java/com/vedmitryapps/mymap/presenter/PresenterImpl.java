@@ -42,6 +42,7 @@ public class PresenterImpl implements Presenter {
 
     @Override
     public void updatePoint(Marker m1, Marker m2) {
+
         Point point = mRealm.where(Point.class)
                 .equalTo("id", (Long) m1.getTag())
                 .findFirst();
@@ -113,7 +114,7 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void updateMarkerDescription(long id, String desc) {
+    public void updatePointDescription(long id, String desc) {
         mRealm.beginTransaction();
         Point point = mRealm.where(Point.class).equalTo("id", id).findFirst();
         point.setDescription(desc);
