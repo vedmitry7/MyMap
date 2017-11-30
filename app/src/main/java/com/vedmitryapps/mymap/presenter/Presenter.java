@@ -3,6 +3,7 @@ package com.vedmitryapps.mymap.presenter;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.Marker;
+import com.vedmitryapps.mymap.model.MarkerImage;
 import com.vedmitryapps.mymap.model.Point;
 
 public interface Presenter {
@@ -14,6 +15,7 @@ public interface Presenter {
     void onMarkerClick(Marker marker);
     void onDestroy();
     void mapReady();
+    MarkerImage getMarkerImage(int markerId);
 
     BitmapDescriptor getBitmap(int markerImageId);
 }

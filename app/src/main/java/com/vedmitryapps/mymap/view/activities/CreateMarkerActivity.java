@@ -1,14 +1,12 @@
 package com.vedmitryapps.mymap.view.activities;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.vedmitryapps.mymap.BitmapUntils;
 import com.vedmitryapps.mymap.R;
 import com.vedmitryapps.mymap.model.MarkerImage;
 import com.vedmitryapps.mymap.view.CreateMarkerSurfaceView;
@@ -58,35 +56,11 @@ public class CreateMarkerActivity extends AppCompatActivity {
 
 
     public void saveImg(View view) {
-        imageView.setImageBitmap(getBitmapFromView(markerSurfaceView));
+        imageView.setImageBitmap(BitmapUntils.getBitmapFromView(markerSurfaceView, 96, 96));
         mRealm.beginTransaction();
         MarkerImage markerImage = mRealm.createObject(MarkerImage.class);
-        markerImage.setImage(getBytes(getBitmapFromView(markerSurfaceView)));
+        markerImage.setImage(getBytes(BitmapUntils.getBitmapFromView(markerSurfaceView, 96,96)));
         mRealm.commitTransaction();
-    }
-
-    public static Bitmap getBitmapFromView(View view) {
-        //Define a bitmap with the same size as the view
-        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-        //Bind a canvas to it
-        Canvas canvas = new Canvas(returnedBitmap);
-        //Get the view's background
-        Drawable bgDrawable = view.getBackground();
-        if (bgDrawable!=null)
-            //has background drawable, then draw it on the canvas
-            bgDrawable.draw(canvas);
-        else
-            //does not have background drawable, then draw white background on the canvas
-            canvas.drawColor(Color.WHITE);
-        // draw the view on the canvas
-        view.draw(canvas);
-        //return the bitmap
-
-        ByteArrayOutputStream blob = new ByteArrayOutputStream();
-        returnedBitmap.compress(Bitmap.CompressFormat.PNG, 0 /* Ignored for PNGs */, blob);
-        byte[] bitmapdata = blob.toByteArray();
-
-        return Bitmap.createScaledBitmap(returnedBitmap, 96,96, true);
     }
 
     byte[] getBytes(Bitmap returnedBitmap){

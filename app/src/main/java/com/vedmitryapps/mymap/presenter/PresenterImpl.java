@@ -1,20 +1,18 @@
 package com.vedmitryapps.mymap.presenter;
 
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
+import com.vedmitryapps.mymap.BitmapUntils;
 import com.vedmitryapps.mymap.R;
 import com.vedmitryapps.mymap.model.MarkerImage;
 import com.vedmitryapps.mymap.model.Point;
 import com.vedmitryapps.mymap.view.activities.ViewInterface;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.realm.exceptions.RealmMigrationNeededException;
 
 public class PresenterImpl implements Presenter {
 
@@ -23,21 +21,7 @@ public class PresenterImpl implements Presenter {
 
     public PresenterImpl(ViewInterface view) {
         this.view = view;
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(view.getContext()).build();
-
-        try {
-            Realm.getInstance(realmConfiguration);
-        } catch (RealmMigrationNeededException e){
-            try {
-                Realm.deleteRealm(realmConfiguration);
-                //Realm file has been deleted.
-                Realm.getInstance(realmConfiguration);
-            } catch (Exception ex){
-                throw ex;
-                //No Realm file to remove.
-            }
-        }
-        mRealm = Realm.getInstance(view.getContext());
+        mRealm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -123,9 +107,18 @@ public class PresenterImpl implements Presenter {
                 .findFirst();
 
         if(markerImage != null){
-            return  BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeByteArray(markerImage.getImage(), 0, markerImage.getImage().length));
+            return BitmapUntils.getBitmapFromByteArray(markerImage.getImage());
         }
         return BitmapDescriptorFactory.fromResource(R.drawable.flag36);
+    }
+
+    @Override
+    public MarkerImage getMarkerImage(int markerImageId) {
+        MarkerImage markerImage = mRealm.where(MarkerImage.class)
+                .equalTo("id", markerImageId)
+                .findFirst();
+
+        return markerImage;
     }
 
     private void updatePoints(){

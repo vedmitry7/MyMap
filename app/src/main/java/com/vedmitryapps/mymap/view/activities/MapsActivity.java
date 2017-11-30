@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.vedmitryapps.mymap.R;
 import com.vedmitryapps.mymap.SphericalUtil;
+import com.vedmitryapps.mymap.model.MarkerImage;
 import com.vedmitryapps.mymap.model.Point;
 import com.vedmitryapps.mymap.presenter.PresenterImpl;
 import com.vedmitryapps.mymap.view.fragments.AddPointFragment;
@@ -358,14 +359,16 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("TAG21", String.valueOf(points.size()));
         for (Point p : points
                 ) {
+            MarkerImage markerImage = presenter.getMarkerImage(p.getMarkerImageId());
            Marker m = mMap.addMarker(new MarkerOptions()
                     .icon(presenter.getBitmap(p.getMarkerImageId()))
                     .draggable(true)
-                    .anchor(0.0f, 1.0f) // Anchors the mMarker on the bottom left
+                    .anchor(markerImage.getCoordinateX(), markerImage.getCoordinateY()) // Anchors the mMarker on the bottom left
                     .position(new LatLng(p.getLatitude(), p.getLongitude()))
                     .title(p.getDescription()));
             m.setTag(p.getId());
             Log.i("TAG21", String.valueOf(p.getDescription()));
+            Log.i("TAG21", "Anchor - " + String.valueOf(markerImage.getCoordinateX()) +"  :  "+ String.valueOf(markerImage.getCoordinateY()));
         }
 
         if (mMarker != null) {

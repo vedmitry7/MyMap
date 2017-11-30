@@ -27,14 +27,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return list.get(selectedPos).getId();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder  {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @Nullable
         @BindView(R.id.imageView)
         ImageView imageView;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
             ButterKnife.bind(this, v);
+            if(imageView!=null)
+            imageView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            selectedPos = this.getAdapterPosition();
+            update();
         }
     }
 
@@ -56,6 +64,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return vh;
     }
 
+    void update(){
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         if (position>=list.size()){
@@ -68,13 +80,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             holder.imageView.setBackgroundColor(Color.TRANSPARENT);
         }
 
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
+        /*holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectedPos = position;
                 notifyDataSetChanged();
             }
-        });
+        });*/
         holder.imageView.setImageBitmap(getBitmap(list.get(position).getImage()));
     }
 

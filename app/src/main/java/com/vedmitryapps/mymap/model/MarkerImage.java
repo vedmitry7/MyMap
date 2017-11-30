@@ -7,6 +7,24 @@ public class MarkerImage extends RealmObject {
 
     private int id;
     private byte[] image;
+    private float coordinateX;
+    private float coordinateY;
+
+    public float getCoordinateX() {
+        return coordinateX;
+    }
+
+    public void setCoordinateX(float coordinateX) {
+        this.coordinateX = coordinateX;
+    }
+
+    public float getCoordinateY() {
+        return coordinateY;
+    }
+
+    public void setCoordinateY(float coordinateY) {
+        this.coordinateY = coordinateY;
+    }
 
     public byte[] getImage() {
         return image;

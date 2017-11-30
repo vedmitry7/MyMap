@@ -2,34 +2,41 @@ package com.vedmitryapps.mymap.view.fragments;
 
 
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.SeekBar;
 
+import com.vedmitryapps.mymap.BitmapUntils;
 import com.vedmitryapps.mymap.R;
 import com.vedmitryapps.mymap.model.MarkerImage;
 import com.vedmitryapps.mymap.model.Point;
 import com.vedmitryapps.mymap.view.CreateMarkerSurfaceView;
 
-import java.io.ByteArrayOutputStream;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
-import io.realm.exceptions.RealmMigrationNeededException;
 
-public class CreateMarkerFragment extends Fragment {
+public class CreateMarkerFragment extends Fragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     @Nullable
     @BindView(R.id.createMarkerSurfaceView)
     CreateMarkerSurfaceView markerSurfaceView;
+    @BindView(R.id.colorBlack)
+    Button buttonColorBlack;
+    @BindView(R.id.colorGreen)
+    Button buttonColorGreen;
+    @BindView(R.id.colorBlue)
+    Button buttonColorBlue;
+    @BindView(R.id.colorRed)
+    Button buttonColorRed;
+
+    @BindView(R.id.seekBar)
+    SeekBar seekBar;
 
     Realm mRealm;
 
@@ -37,25 +44,13 @@ public class CreateMarkerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_marker, container, false);
-
-
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(getActivity()).build();
-
-        try {
-            Realm.getInstance(realmConfiguration);
-        } catch (RealmMigrationNeededException e){
-            try {
-                Realm.deleteRealm(realmConfiguration);
-                //Realm file has been deleted.
-                Realm.getInstance(realmConfiguration);
-            } catch (Exception ex){
-                throw ex;
-                //No Realm file to remove.
-            }
-        }
-        mRealm = Realm.getInstance(getActivity());
-
         ButterKnife.bind(this, view);
+        mRealm = Realm.getDefaultInstance();
+        buttonColorBlack.setOnClickListener(this);
+        buttonColorBlue.setOnClickListener(this);
+        buttonColorGreen.setOnClickListener(this);
+        buttonColorRed.setOnClickListener(this);
+        seekBar.setOnSeekBarChangeListener(this);
         return view;
     }
 
@@ -63,38 +58,11 @@ public class CreateMarkerFragment extends Fragment {
         mRealm.beginTransaction();
         MarkerImage markerImage = mRealm.createObject(MarkerImage.class);
         markerImage.setId(getNextKey());
-        markerImage.setImage(getBytes(getBitmapFromView(markerSurfaceView)));
+        markerSurfaceView.prepareToScreen();
+        markerImage.setImage(BitmapUntils.getBytesFromBitmap(BitmapUntils.getBitmapFromView(markerSurfaceView, 96, 96)));
+        markerImage.setCoordinateX(markerSurfaceView.getPositionMarker()[0]);
+        markerImage.setCoordinateY(markerSurfaceView.getPositionMarker()[1]);
         mRealm.commitTransaction();
-    }
-
-    public static Bitmap getBitmapFromView(View view) {
-        //Define a bitmap with the same size as the view
-        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-        //Bind a canvas to it
-        Canvas canvas = new Canvas(returnedBitmap);
-        //Get the view's background
-        Drawable bgDrawable = view.getBackground();
-        if (bgDrawable!=null)
-            //has background drawable, then draw it on the canvas
-            bgDrawable.draw(canvas);
-        else
-            //does not have background drawable, then draw white background on the canvas
-            canvas.drawColor(Color.WHITE);
-        // draw the view on the canvas
-        view.draw(canvas);
-        //return the bitmap
-
-        ByteArrayOutputStream blob = new ByteArrayOutputStream();
-        returnedBitmap.compress(Bitmap.CompressFormat.PNG, 0 /* Ignored for PNGs */, blob);
-        byte[] bitmapdata = blob.toByteArray();
-
-        return Bitmap.createScaledBitmap(returnedBitmap, 96,96, true);
-    }
-
-    byte[] getBytes(Bitmap returnedBitmap){
-        ByteArrayOutputStream blob = new ByteArrayOutputStream();
-        returnedBitmap.compress(Bitmap.CompressFormat.PNG, 0 /* Ignored for PNGs */, blob);
-        return blob.toByteArray();
     }
 
     public int getNextKey() {
@@ -112,5 +80,39 @@ public class CreateMarkerFragment extends Fragment {
 
     public void nextStep() {
         markerSurfaceView.nextStep();
+    }
+
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.colorBlack:
+                markerSurfaceView.setColor(Color.BLACK);
+                break;
+            case R.id.colorRed:
+                markerSurfaceView.setColor(Color.RED);
+                break;
+            case R.id.colorGreen:
+                markerSurfaceView.setColor(Color.GREEN);
+                break;
+            case R.id.colorBlue:
+                markerSurfaceView.setColor(Color.BLUE);
+                break;
+        }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        markerSurfaceView.setStrokeWidth(i);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }

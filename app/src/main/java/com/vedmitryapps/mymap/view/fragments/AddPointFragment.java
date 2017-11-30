@@ -19,9 +19,7 @@ import com.vedmitryapps.mymap.view.adapters.RecyclerAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.realm.exceptions.RealmMigrationNeededException;
 
 public class AddPointFragment extends Fragment {
 
@@ -43,20 +41,7 @@ public class AddPointFragment extends Fragment {
         View view = inflater.inflate(R.layout.add_point, container, false);
         ButterKnife.bind(this, view);
 
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(view.getContext()).build();
-
-        try {
-            Realm.getInstance(realmConfiguration);
-        } catch (RealmMigrationNeededException e){
-            try {
-                Realm.deleteRealm(realmConfiguration);
-                Realm.getInstance(realmConfiguration);
-            } catch (Exception ex){
-                throw ex;
-            }
-        }
-
-        mRealm = Realm.getInstance(view.getContext());
+        mRealm = Realm.getDefaultInstance();
 
         RealmResults<MarkerImage> points = mRealm.where(MarkerImage.class).findAll();
 

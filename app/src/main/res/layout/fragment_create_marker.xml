@@ -2,13 +2,76 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:background="@android:color/white"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <com.vedmitryapps.mymap.view.CreateMarkerSurfaceView
-        android:layout_width="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
         android:id="@+id/createMarkerSurfaceView" />
+
+    <LinearLayout
+        android:paddingLeft="16dp"
+        android:id="@+id/colorsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:onClick="setColor"
+            android:layout_margin="10dp"
+        android:id="@+id/colorRed"
+        android:background="#ff0000"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
+        <Button
+            android:layout_margin="10dp"
+
+            android:id="@+id/colorGreen"
+            android:background="#00ff00"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+        <Button
+            android:layout_margin="10dp"
+
+            android:id="@+id/colorBlue"
+            android:background="#0000ff"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+        <Button
+            android:layout_margin="10dp"
+
+            android:id="@+id/colorBlack"
+            android:background="#000"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_alignParentRight="true"
+            android:id="@+id/paintSize"
+            android:layout_width="36dp"
+            android:layout_height="36dp"/>
+
+        <SeekBar
+            android:min="25"
+            android:max="200"
+            android:progress="25"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/paintSize"
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 
     <Button
         android:onClick="createMarkerFinished"
