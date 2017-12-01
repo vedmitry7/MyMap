@@ -44,7 +44,8 @@ public class PresenterImpl implements Presenter {
     public void updatePoint(Marker m1, Marker m2) {
 
         Point point = mRealm.where(Point.class)
-                .equalTo("id", (Long) m1.getTag())
+                .equalTo("latitude", m1.getPosition().latitude)
+                .equalTo("longitude", m1.getPosition().longitude)
                 .findFirst();
 
         if(point != null){
@@ -53,6 +54,9 @@ public class PresenterImpl implements Presenter {
             point.setLatitude(m2.getPosition().latitude);
             point.setLongitude(m2.getPosition().longitude);
             mRealm.commitTransaction();
+        } else {
+            Log.i("TAG21", "Point not founded");
+
         }
     }
 

@@ -32,10 +32,12 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 import com.vedmitryapps.mymap.R;
 import com.vedmitryapps.mymap.SphericalUtil;
-import com.vedmitryapps.mymap.model.MarkerImage;
+import com.vedmitryapps.mymap.model.MyItem;
 import com.vedmitryapps.mymap.model.Point;
+import com.vedmitryapps.mymap.model.Render;
 import com.vedmitryapps.mymap.presenter.PresenterImpl;
 import com.vedmitryapps.mymap.view.fragments.AddPointFragment;
 import com.vedmitryapps.mymap.view.fragments.CreateMarkerFragment;
@@ -68,9 +70,10 @@ public class MapsActivity extends AppCompatActivity implements
     private AddPointFragment addPointFragment;
     private CreateMarkerFragment createMarkerFragment;
 
+    private ClusterManager<MyItem> mClusterManager;
+
     LatLng l1 = new LatLng(47.973910,37.712992);
     LatLng l2 = new LatLng(47.975638,37.713850);
-
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -99,7 +102,7 @@ public class MapsActivity extends AppCompatActivity implements
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 Location location = locationResult.getLastLocation();
-                Log.i("TAG21", location.getLatitude() + ":" + location.getLongitude());
+              //  Log.i("TAG21", location.getLatitude() + ":" + location.getLongitude());
                 textView.setText(count +  "\r\n" + location.getLatitude() + "\r\n" + location.getLongitude() + "\r\n" + "Distance - " + SphericalUtil.computeDistanceBetween(l1, new LatLng(location.getLatitude(), location.getLongitude())));
                 if(SphericalUtil.computeDistanceBetween(l2, new LatLng(location.getLatitude(), location.getLongitude()))>200){
                     textView.setTextColor(Color.RED);
@@ -203,11 +206,6 @@ public class MapsActivity extends AppCompatActivity implements
         }
 
         LatLng sydney = new LatLng(-34, 151);
-     /*   mMarker = mMap.addMarker(new MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney")
-                .draggable(true));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
 
         mMyLocationMarker = mMap.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.flag24))
@@ -216,8 +214,23 @@ public class MapsActivity extends AppCompatActivity implements
                 .visible(false)
                 .title("I'm"));
 
-        presenter.mapReady();
         drawCircle(l1);
+
+        mClusterManager = new ClusterManager<>(this, mMap);
+        mClusterManager.setRenderer(new Render(this, mMap, mClusterManager));
+        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
+            @Override
+            public boolean onClusterItemClick(MyItem myItem) {
+                Log.i("TAG21", myItem.getTitle());
+                return false;
+            }
+        });
+
+
+
+        mMap.setOnCameraIdleListener(mClusterManager);
+        //mMap.setOnMarkerClickListener(mClusterManager);
+        presenter.mapReady();
 
        /* LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(mLocationRequest);
@@ -359,8 +372,8 @@ public class MapsActivity extends AppCompatActivity implements
         Log.i("TAG21", String.valueOf(points.size()));
         for (Point p : points
                 ) {
-            MarkerImage markerImage = presenter.getMarkerImage(p.getMarkerImageId());
-           Marker m = mMap.addMarker(new MarkerOptions()
+        /*    MarkerImage markerImage = presenter.getMarkerImage(p.getMarkerImageId());
+            Marker m = mMap.addMarker(new MarkerOptions()
                     .icon(presenter.getBitmap(p.getMarkerImageId()))
                     .draggable(true)
                     .anchor(markerImage.getCoordinateX(), markerImage.getCoordinateY()) // Anchors the mMarker on the bottom left
@@ -368,7 +381,12 @@ public class MapsActivity extends AppCompatActivity implements
                     .title(p.getDescription()));
             m.setTag(p.getId());
             Log.i("TAG21", String.valueOf(p.getDescription()));
-            Log.i("TAG21", "Anchor - " + String.valueOf(markerImage.getCoordinateX()) +"  :  "+ String.valueOf(markerImage.getCoordinateY()));
+            Log.i("TAG21", "Anchor - " + String.valueOf(markerImage.getCoordinateX()) +"  :  "+ String.valueOf(markerImage.getCoordinateY()));*/
+            MyItem item = new MyItem(p.getLatitude(), p.getLongitude());
+            Log.i("TAG21", String.valueOf(p.getLatitude()));
+            item.setTitle(p.getDescription());
+            item.setIconId(p.getMarkerImageId());
+            mClusterManager.addItem(item);
         }
 
         if (mMarker != null) {
@@ -421,19 +439,21 @@ public class MapsActivity extends AppCompatActivity implements
 
     @Override
     public void onMarkerDragStart(Marker marker) {
+
         selectedMarker = marker;
-        Log.i("TAG21", String.valueOf(marker.getTag()));
+        Log.i("TAG21", "DragStart" + String.valueOf(marker.getPosition().latitude));
 
     }
 
     @Override
     public void onMarkerDrag(Marker marker) {
+        Log.i("TAG21", "DRAG... " + String.valueOf(marker.getPosition().latitude));
 
     }
 
     @Override
     public void onMarkerDragEnd(Marker marker) {
-        if(marker.getTag().equals("main")) {
+        if(marker.getTag()!=null && marker.getTag().equals("main")) {
             onMapClick(marker.getPosition());
             return;
         }
