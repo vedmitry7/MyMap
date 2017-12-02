@@ -1,9 +1,13 @@
 package com.vedmitryapps.mymap.model;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
-public class Point extends RealmObject {
+public class Point extends RealmObject implements ClusterItem {
 
     @PrimaryKey
     private long id;
@@ -14,6 +18,9 @@ public class Point extends RealmObject {
     private int color;
     private int radius;
     private int markerImageId;
+
+    @Ignore
+    private LatLng position;
 
     public int getMarkerImageId() {
         return markerImageId;
@@ -77,5 +84,14 @@ public class Point extends RealmObject {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public void setPosition(LatLng latLng){
+        position = latLng;
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return position;
     }
 }

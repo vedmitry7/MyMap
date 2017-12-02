@@ -159,14 +159,16 @@ public class PresenterImpl implements Presenter {
                 .findAll();
         mRealm.beginTransaction();
 
-        for (Point p:points
-             ) {
-            p.removeFromRealm();
+        for (int i = points.size()-1; i >= 0; i--) {
+            points.get(i).removeFromRealm();
+            Log.i("TAG21", "remove " + i);
+
         }
+
         mRealm.commitTransaction();
 
 
-    RealmResults<MarkerImage> markerImages = mRealm.where(MarkerImage.class)
+  /*  RealmResults<MarkerImage> markerImages = mRealm.where(MarkerImage.class)
             .findAll();
         mRealm.beginTransaction();
 
@@ -175,5 +177,6 @@ public class PresenterImpl implements Presenter {
         m.removeFromRealm();
     }
         mRealm.commitTransaction();
+        */
     }
 }

@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.vedmitryapps.mymap.R;
 import com.vedmitryapps.mymap.SphericalUtil;
-import com.vedmitryapps.mymap.model.MyItem;
 import com.vedmitryapps.mymap.model.Point;
 import com.vedmitryapps.mymap.model.Render;
 import com.vedmitryapps.mymap.presenter.PresenterImpl;
@@ -70,7 +69,7 @@ public class MapsActivity extends AppCompatActivity implements
     private AddPointFragment addPointFragment;
     private CreateMarkerFragment createMarkerFragment;
 
-    private ClusterManager<MyItem> mClusterManager;
+    private ClusterManager<Point> mClusterManager;
 
     LatLng l1 = new LatLng(47.973910,37.712992);
     LatLng l2 = new LatLng(47.975638,37.713850);
@@ -218,10 +217,10 @@ public class MapsActivity extends AppCompatActivity implements
 
         mClusterManager = new ClusterManager<>(this, mMap);
         mClusterManager.setRenderer(new Render(this, mMap, mClusterManager));
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
+        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Point>() {
             @Override
-            public boolean onClusterItemClick(MyItem myItem) {
-                Log.i("TAG21", myItem.getTitle());
+            public boolean onClusterItemClick(Point myItem) {
+                Log.i("TAG21", myItem.getDescription());
                 return false;
             }
         });
@@ -382,11 +381,14 @@ public class MapsActivity extends AppCompatActivity implements
             m.setTag(p.getId());
             Log.i("TAG21", String.valueOf(p.getDescription()));
             Log.i("TAG21", "Anchor - " + String.valueOf(markerImage.getCoordinateX()) +"  :  "+ String.valueOf(markerImage.getCoordinateY()));*/
-            MyItem item = new MyItem(p.getLatitude(), p.getLongitude());
+
+        /* MyItem item = new MyItem(p.getLatitude(), p.getLongitude());
             Log.i("TAG21", String.valueOf(p.getLatitude()));
             item.setTitle(p.getDescription());
-            item.setIconId(p.getMarkerImageId());
-            mClusterManager.addItem(item);
+            item.setIconId(p.getMarkerImageId());*/
+            Log.i("TAG21", "P. Lat - " + p.getLatitude() +", P. Lng " + p.getLongitude());
+            p.setPosition(new LatLng(p.getLatitude(), p.getLongitude()));
+            mClusterManager.addItem(p);
         }
 
         if (mMarker != null) {

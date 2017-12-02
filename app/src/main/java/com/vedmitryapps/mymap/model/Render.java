@@ -10,24 +10,25 @@ import com.vedmitryapps.mymap.BitmapUntils;
 
 import io.realm.Realm;
 
-public class Render extends DefaultClusterRenderer<MyItem> {
+public class Render extends DefaultClusterRenderer<Point> {
 
     private Realm mRealm;
 
-    public Render(Context context, GoogleMap map, ClusterManager<MyItem> clusterManager) {
+    public Render(Context context, GoogleMap map, ClusterManager<Point> clusterManager) {
         super(context, map, clusterManager);
         mRealm = Realm.getDefaultInstance();
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(MyItem item, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(Point item, MarkerOptions markerOptions) {
 
         MarkerImage markerImage = mRealm.where(MarkerImage.class)
-                .equalTo("id", item.getIconId())
+                .equalTo("id", item.getMarkerImageId())
                 .findFirst();
 
         markerOptions.icon(BitmapUntils.getBitmapFromByteArray(markerImage.getImage()));
-        markerOptions.title(item.getTitle());
+        markerOptions.anchor(markerImage.getCoordinateX(), markerImage.getCoordinateY());
+        markerOptions.title(item.getDescription());
         markerOptions.draggable(true);
         super.onBeforeClusterItemRendered(item, markerOptions);
     }
